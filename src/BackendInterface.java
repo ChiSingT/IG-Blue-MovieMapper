@@ -1,23 +1,28 @@
 import java.util.List;
 
+// --== CS400 File Header Information ==--
+// Author: CS400 Course Staff
+// Email: heimerl@cs.wisc.edu / dahl@cs.wisc.edu
+// Notes: This interface is part of the starter archive for Projecct One
+//        in spring 2021.
 public interface BackendInterface {
 
-  void addGenre(String genre);
+  public void addGenre(String genre);
 
-  void addAvgRating(String rating);
+  public void addAvgRating(String rating);
 
-  void removeGenre(String genre);
+  public void removeGenre(String genre);
 
-  void removeAvgRating(String rating);
+  public void removeAvgRating(String rating);
 
-  List<String> getGenres();
+  public List<String> getGenres();
 
-  List<String> getAvgRatings();
+  public List<String> getAvgRatings();
 
-  int getNumberOfMovies();
+  public int getNumberOfMovies();
 
-  List<MovieInterface> getThreeMovies(int startingIndex);
+  public List<String> getAllGenres();
 
-  List<String> getAllGenres();
+  public List<MovieInterface> getThreeMovies(int startingIndex);
 
 }

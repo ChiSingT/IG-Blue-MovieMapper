@@ -20,7 +20,7 @@ public class FrontEnd {
     scanner = new Scanner(System.in);
 
     // initialize back end
-//    backEnd = BackEnd(args);
+    backEnd = new Backend(args);
 
     // print welcome message
     System.out.println("Welcome to Movie Mapper!");

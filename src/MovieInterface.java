@@ -1,20 +1,25 @@
 import java.util.List;
 
+// --== CS400 File Header Information ==--
+// Author: CS400 Course Staff
+// Email: heimerl@cs.wisc.edu / dahl@cs.wisc.edu
+// Notes: This interface is part of the starter archive for Projecct One
+//        in spring 2021.
 public interface MovieInterface extends Comparable<MovieInterface> {
 
-  String getTitle();
+  public String getTitle();
 
-  Integer getYear();
+  public Integer getYear();
 
-  List<String> getGenres();
+  public List<String> getGenres();
 
-  String getDirector();
+  public String getDirector();
 
-  String getDescription();
+  public String getDescription();
 
-  Float getAvgVote();
+  public Float getAvgVote();
 
   // from super interface Comparable
-  int compareTo(MovieInterface otherMovie);
+  public int compareTo(MovieInterface otherMovie);
 
 }
