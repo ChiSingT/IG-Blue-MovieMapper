@@ -2,6 +2,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+// --== CS400 File Header Information ==--
+// Author: Jimmy Li
+// Email: xli2272@wisc.edu
+// Notes: This is the source file for code developed
+//        for the front end of the Movie Mapper project.
 public class FrontEnd {
 
   public static Scanner scanner;
@@ -9,6 +14,13 @@ public class FrontEnd {
 
   private static List<String> allR;
 
+  /**
+   * This is the entry point of the Movie Mapper application. The program will start in its base
+   * mode, initialize a few variables and the Backend, print out a welcome message, top three movies
+   * based on the selected ratings and the genres.
+   *
+   * @param args program arguments
+   */
   public static void main(String[] args) {
 
     // making a list of all ratings in String for convenience
@@ -17,6 +29,7 @@ public class FrontEnd {
       allR.add(String.valueOf(i));
     }
 
+    // initializing scanner variable
     scanner = new Scanner(System.in);
 
     // initialize back end
@@ -31,11 +44,12 @@ public class FrontEnd {
       backEnd.addAvgRating(rating);
     }
 
+    // program loop
     boolean running = true;
-    int index = 0;
+    int browsingIndex = 0;
     while (running) {
       // print top three movies
-      printMovies(backEnd.getThreeMovies(index), index);
+      printMovies(backEnd.getThreeMovies(browsingIndex), browsingIndex);
 
       // list commands
       System.out.println("Enter 'x' to exit the program.");
@@ -58,14 +72,21 @@ public class FrontEnd {
       } else if (input.equals("r")) {
         enterRatingsMode();
       } else if (checkInt(input)) {
-        index = Integer.parseInt(input) - 1;
+        browsingIndex = Integer.parseInt(input) - 1;
       } else {
         System.out.println("Invalid input.");
       }
     }
   }
 
+  /**
+   * This method contains all of the Genre Selection Mode. This method has a while loop that will
+   * print all genres with an indication of whether they are selected or not, and then prints out a
+   * list of commands, then a prompt for the user to enter a command. 'x' will exit this mode and
+   * return to the base mode while a number will select/deselect a genre.
+   */
   public static void enterGenreMode() {
+    // genre selection mode program loop
     boolean inMode = true;
     while (inMode) {
       // print selected genres
@@ -97,7 +118,14 @@ public class FrontEnd {
     }
   }
 
+  /**
+   * This method contains all of the Rating Selection Mode. This method has a while loop that will
+   * print all ratings with an indication of whether they are selected or not, and then prints out a
+   * list of commands, then a prompt for the user to enter a command. 'x' will exit this mode and
+   * return to the base mode while a number will select/deselect a rating.
+   */
   public static void enterRatingsMode() {
+    // rating selection mode program loop
     boolean inMode = true;
     while (inMode) {
       // print selected ratings
@@ -134,6 +162,12 @@ public class FrontEnd {
     }
   }
 
+  /**
+   * This is a helper method that checks whether a String is an integer in String form.
+   *
+   * @param in input String to be checked
+   * @return true if parameter is a number in String form, false otherwise
+   */
   private static boolean checkInt(String in) {
     try {
       int test = Integer.parseInt(in);
@@ -143,7 +177,15 @@ public class FrontEnd {
     return true;
   }
 
+  /**
+   * This helper method formats three movies taken from the Backend and puts them in a table, then
+   * prints them.
+   *
+   * @param movies movies to be printed
+   * @param index  rank of the first movie
+   */
   private static void printMovies(List<MovieInterface> movies, int index) {
+    // table header that shows what each column of the table is
     String[][] table = new String[4][7];
     table[0][0] = "";
     table[0][1] = "Title";
@@ -153,6 +195,7 @@ public class FrontEnd {
     table[0][5] = "Description";
     table[0][6] = "Avg. Vote";
 
+    // format movie information into a table of Strings
     for (int i = 1; i < 4; i++) {
       table[i][0] = (index + i) + ".";
       table[i][1] = movies.get(i).getTitle();
@@ -163,12 +206,17 @@ public class FrontEnd {
       table[i][6] = movies.get(i).getAvgVote().toString();
     }
 
+    // print in table format
     for (String[] row : table) {
       System.out.format("%-15s%-15s%-15s%-15s%-15s%-15s%-15s%n", row);
     }
 
   }
 
+  /**
+   * This helper method prints all genres with a "[x] " in front of any genre that is selected and a
+   * "[ ] " in front of a genre that is not selected.
+   */
   private static void printGenres() {
     List<String> selectedG = backEnd.getGenres();
     List<String> allG = backEnd.getAllGenres();
@@ -183,10 +231,20 @@ public class FrontEnd {
     }
   }
 
+  /**
+   * This helper method checks whether or not a genre is selected.
+   *
+   * @param genre input genre to be checked
+   * @return true if selected, false otherwise
+   */
   private static boolean genreSelected(String genre) {
     return backEnd.getGenres().contains(genre);
   }
 
+  /**
+   * This helper method prints all ratings with a "[x] " in front of any rating that is selected and
+   * a "[ ] " in front of a rating that is not selected.
+   */
   private static void printRatings() {
     List<String> selectedR = backEnd.getAvgRatings();
 
@@ -200,6 +258,12 @@ public class FrontEnd {
     }
   }
 
+  /**
+   * This helper method checks whether or not a rating is selected.
+   *
+   * @param rating input rating to be checked
+   * @return true if selected, false otherwise
+   */
   private static boolean ratingSelected(String rating) {
     return backEnd.getAvgRatings().contains(rating);
   }

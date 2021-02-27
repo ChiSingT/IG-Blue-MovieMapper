@@ -14,6 +14,8 @@ Additional Contributions:
 -------------------------
 I organized the initial file structure that we have on a github repo. I also took the initiative and spoke most of the time during our first two meetings. Also, I don't know if the integration manager is supposed to do this, but I reminded everyone of the deadline and made sure that we communicated about our file sharing.
 
+Implementation wise, I reminded the Backend developer that the Backend constructor is supposed to take in a String[] argument as a parameter rather than a File.
+
 Signature:
 ----------
  Xihe Li
