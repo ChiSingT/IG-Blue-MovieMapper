@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.io.FileReader;
@@ -11,7 +10,8 @@ import java.io.Reader;
 // Notes: code for Backend MovieMapper
 //
 public class Backend implements BackendInterface {
-    private List<MovieInterface> listOfMovies;;
+    private List<MovieInterface> listOfMovies;
+    private List<MovieInterface> MovieObjects;
     private LinkedList<genreInfo>[] genres;
     private LinkedList<ratingInfo>[] avgRatings;
     private int capacity = 10;
@@ -20,17 +20,17 @@ public class Backend implements BackendInterface {
 
 
     /*
-     * class that stores genre as key and the MovieInterface object that has the associated genre as
-     * one of its genres
+     * class that stores genre as key and the MovieInterface object that has the associated genres
+     * as one of its genres
      */
     public class genreInfo {
         private String key;
-        private MovieInterface value;
+        private List<MovieInterface> value;
 
         /*
          * constructor to set key and value
          */
-        public genreInfo(String key, MovieInterface value) {
+        public genreInfo(String key, List<MovieInterface> value) {
             this.key = key;
             this.value = value;
         }
@@ -44,9 +44,9 @@ public class Backend implements BackendInterface {
         }
 
         /*
-         * getter method to retrieve Movie with said genre
+         * getter method to retrieve list of movies with said genre
          */
-        public MovieInterface getValue() {
+        public List<MovieInterface> getValue() {
             return this.value;
         }
     }
@@ -57,14 +57,14 @@ public class Backend implements BackendInterface {
      */
     public class ratingInfo {
         private String key;
-        private MovieInterface value;
+        private List<MovieInterface> value;
         private int size;
         private int capacity = 10;
 
         /*
          * constructor to set key and value
          */
-        public ratingInfo(String key, MovieInterface value) {
+        public ratingInfo(String key, List<MovieInterface> value) {
             this.key = key;
             this.value = value;
         }
@@ -79,7 +79,7 @@ public class Backend implements BackendInterface {
         /*
          * getter method to retrieve Movie with said rating
          */
-        public MovieInterface getValue() {
+        public List<MovieInterface> getValue() {
             return this.value;
         }
     }
@@ -93,18 +93,19 @@ public class Backend implements BackendInterface {
      * @param args list of command line arguments passed to front end
      */
     public Backend(String[] args) {
-        MovieDataReaderInterface movies = new MovieDataReaderDummy();
+        MovieDataReader movies = new MovieDataReader();
         Reader reader = null;
+        this.MovieObjects = new ArrayList<MovieInterface>();
 
         try {
             reader = new FileReader(args[0]);
-            listOfMovies = (List<MovieInterface>) movies.readDataSet(reader);
+            this.MovieObjects = movies.readDataSet(reader);
         } catch (Exception e) {
-            // System.out.println("error trying to load data to readDataSet method");
         }
 
         this.genres = (LinkedList<genreInfo>[]) new LinkedList[capacity];
         this.avgRatings = (LinkedList<ratingInfo>[]) new LinkedList[capacity];
+        this.listOfMovies = new ArrayList();
     }
 
     /**
@@ -113,15 +114,16 @@ public class Backend implements BackendInterface {
      * @param r A reader that contains the data in CSV format.
      */
     public Backend(Reader r) {
-        MovieDataReaderInterface movies = new MovieDataReaderDummy();
+        MovieDataReader movies = new MovieDataReader();
+        this.MovieObjects = new ArrayList();
 
         try {
-            listOfMovies = (List<MovieInterface>) movies.readDataSet(r);
+            this.MovieObjects = movies.readDataSet(r);
         } catch (Exception e) {
-            System.out.println("error trying to load data to readDataSet method");
         }
         genres = (LinkedList<genreInfo>[]) new LinkedList[capacity];
         avgRatings = (LinkedList<ratingInfo>[]) new LinkedList[capacity];
+        this.listOfMovies = new ArrayList();
     }
 
     /**
@@ -130,8 +132,8 @@ public class Backend implements BackendInterface {
      */
     @Override
     public void addGenre(String genre) {
+        List<MovieInterface> add = new ArrayList<MovieInterface>();
         genreInfo newGenre = null;
-        boolean added = false;
 
 
         if (genre == null) {
@@ -159,30 +161,18 @@ public class Backend implements BackendInterface {
         // iterates through list of movieNames and finds each movie with the
         // associated genre. Creates a new genreInfo object with key as the genre and value
         // as the movie and adds this object to the hashcode index of the genre
-        for (int i = 0; i < listOfMovies.size(); i++) {
-            if (listOfMovies.get(i).getGenres().contains(genre)) {
-                newGenre = new genreInfo(genre, listOfMovies.get(i));
-                genres[index].add(depth, newGenre);
-                depth++;
-                added = true;
+        for (int i = 0; i < MovieObjects.size(); i++) {
+            if (MovieObjects.get(i).getGenres().contains(genre)) {
+                this.listOfMovies.add(MovieObjects.get(i));
+                add.add(MovieObjects.get(i));
             }
 
         }
-        if (added == true) {
-            this.size++;
-        } else {
-            newGenre = new genreInfo(genre, null);
-            genres[index].add(depth, newGenre);
-            this.size++;
-        }
-
-        // rechecks the size of the hashtable
-        loadfactor = ((double) this.size) / (double) this.capacity;
-        if (loadfactor >= .85) {
-            reHashGenres();
-            }
-           
+        newGenre = new genreInfo(genre, add);
+        genres[index].add(depth, newGenre);
         this.depth = 0;
+        this.size++;
+
     }
 
     /**
@@ -190,8 +180,8 @@ public class Backend implements BackendInterface {
      */
     @Override
     public void addAvgRating(String rating) {
+        List<MovieInterface> add = new ArrayList<MovieInterface>();
         ratingInfo newRating = null;
-        boolean added = false;
 
         if (rating == null) {
 
@@ -225,29 +215,25 @@ public class Backend implements BackendInterface {
         // iterates through list of movieNames and finds each movie with the
         // associated rating. Creates a new ratingInfo object with key as the rating and value
         // as the movie and adds this object to the hashcode index of the rating
-        for (int i = 0; i < listOfMovies.size(); i++) {
-            if ((int) (float) listOfMovies.get(i).getAvgVote() == rate) {
-                newRating = new ratingInfo(String.valueOf(rate), listOfMovies.get(i));
-                avgRatings[index].add(depth, newRating);
-                added = true;
-                depth++;
+        for (int i = 0; i < MovieObjects.size(); i++) {
+            if ((int) (float) MovieObjects.get(i).getAvgVote() == rate) {
+                this.listOfMovies.add(MovieObjects.get(i));
+                add.add(MovieObjects.get(i));
             }
 
         }
+
+        newRating = new ratingInfo(String.valueOf(rate), add);
+        avgRatings[index].add(depth, newRating);
+        this.depth = 0;
+        this.size++;
+
         // rechecks hashtable size
         loadfactor = ((double) this.size) / (double) this.capacity;
         if (loadfactor >= .85) {
             reHashRatings();
         }
 
-        if (added == true) {
-            this.size++;
-        } else {
-            newRating = new ratingInfo(String.valueOf(rate), null);
-            avgRatings[index].add(depth, newRating);
-        }
-
-        this.depth = 0;
     }
 
     /*
@@ -379,9 +365,10 @@ public class Backend implements BackendInterface {
      */
     @Override
     public void removeGenre(String genre) {
+        List<MovieInterface> movies = new ArrayList<MovieInterface>();
         // determines hashcode and hashindex for genre
-        
-        if(genre == null) {
+
+        if (genre == null) {
             return;
         }
         int hashCode = genre.hashCode();
@@ -398,6 +385,7 @@ public class Backend implements BackendInterface {
         if (genres[index] != null) {
             for (int i = 0; i < genres[index].size(); i++) {
                 if (genres[index].get(i).getKey().equals(genre)) {
+                    movies = genres[index].get(i).getValue();
                     genres[index].remove(i);
 
 
@@ -405,6 +393,10 @@ public class Backend implements BackendInterface {
                         genres[index] = null;
                     }
                     this.size--;
+
+                    for (int k = 0; k < movies.size(); k++) {
+                        listOfMovies.remove(movies.get(k));
+                    }
                     return;
                 }
             }
@@ -417,7 +409,8 @@ public class Backend implements BackendInterface {
      */
     @Override
     public void removeAvgRating(String rating) {
-        if(rating == null) {
+        List<MovieInterface> movies = new ArrayList<MovieInterface>();
+        if (rating == null) {
             return;
         }
         // determines hashcode and hashindex for rating
@@ -434,6 +427,7 @@ public class Backend implements BackendInterface {
         if (avgRatings[index] != null) {
             for (int i = 0; i < avgRatings[index].size(); i++) {
                 if (avgRatings[index].get(i).getKey().equals(rating)) {
+                    movies = avgRatings[index].get(i).getValue();
                     avgRatings[index].remove(i);
 
 
@@ -441,6 +435,10 @@ public class Backend implements BackendInterface {
                         avgRatings[index] = null;
                     }
                     this.size--;
+
+                    for (int k = 0; k < movies.size(); k++) {
+                        listOfMovies.remove(movies.get(k));
+                    }
                     return;
                 }
             }
@@ -456,7 +454,9 @@ public class Backend implements BackendInterface {
 
         for (int i = 0; i < this.genres.length; i++) {
             if (this.genres[i] != null) {
-                listGenres.add(this.genres[i].get(0).getKey().toString());
+                for (int j = 0; j < this.genres[i].size(); j++) {
+                    listGenres.add(this.genres[i].get(j).getKey().toString());
+                }
             }
         }
         return listGenres;
@@ -472,9 +472,7 @@ public class Backend implements BackendInterface {
         for (int i = 0; i < this.avgRatings.length; i++) {
             if (this.avgRatings[i] != null) {
                 for (int j = 0; j < this.avgRatings[i].size(); j++) {
-                    if (this.avgRatings[i].get(j) != null) {
-                        listRatings.add(this.avgRatings[i].get(j).getKey().toString());
-                    }
+                    listRatings.add(this.avgRatings[i].get(j).getKey().toString());
                 }
             }
         }
@@ -496,8 +494,8 @@ public class Backend implements BackendInterface {
     public List<String> getAllGenres() {
         List<String> allGenres = new ArrayList<String>();
 
-        for (int i = 0; i < listOfMovies.size(); i++) {
-            List<String> listGenres = listOfMovies.get(i).getGenres();
+        for (int i = 0; i < MovieObjects.size(); i++) {
+            List<String> listGenres = MovieObjects.get(i).getGenres();
 
             for (int j = 0; j < listGenres.size(); j++) {
                 if (!allGenres.contains(listGenres.get(j))) {
@@ -511,7 +509,6 @@ public class Backend implements BackendInterface {
 
     /**
      * Returns the movies that match the ratings and genres. 
-     * Ask about this method in Office hoURS
      */
     @Override
     public List<MovieInterface> getThreeMovies(int startingIndex) {
@@ -522,13 +519,13 @@ public class Backend implements BackendInterface {
         }
 
         for (int i = 0; i < movieList.size(); i++) {
-            for (int j = 1; j < movieList.size(); j++)
+            for (int j = 1; j < movieList.size(); j++) {
                 if (movieList.get(i).getAvgVote() < movieList.get(j).getAvgVote()) {
                     MovieInterface swap = movieList.get(j);
                     movieList.set(j, movieList.get(i));
                     movieList.set(i, swap);
                 }
-
+            }
         }
         return movieList;
 
