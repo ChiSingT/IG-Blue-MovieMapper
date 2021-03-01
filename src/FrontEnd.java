@@ -24,22 +24,26 @@ public class FrontEnd {
    * @param args program arguments
    */
   public static void main(String[] args) {
-
-    // initializing scanner variable
-    scanner = new Scanner(System.in);
-
     new FrontEnd().run(args);
   }
 
   public void run(String[] args) {
     // initialize back end
     backEnd = new Backend(args);
+
+    // initializing scanner variable
+    scanner = new Scanner(System.in);
+
     enterBaseMode();
   }
 
   public void run(Backend backend) {
     // initialize back end
     backEnd = backend;
+
+    // initializing scanner variable
+    scanner = new Scanner(System.in);
+
     enterBaseMode();
   }
 
@@ -51,11 +55,6 @@ public class FrontEnd {
     // select all ratings
     for (String rating : allR) {
       backEnd.addAvgRating(rating);
-    }
-
-    // select all genres
-    for (String genre : backEnd.getAllGenres()) {
-      backEnd.addGenre(genre);
     }
 
     // program loop
