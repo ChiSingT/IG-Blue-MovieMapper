@@ -103,6 +103,11 @@ public class MovieDataReader implements MovieDataReaderInterface{
                     director = director.replace("\"", "");
                     
                 }
+                
+                // deletes the quotes from descriptions
+                if (description.contains("\"")) {
+                    description = description.replace("\"", "");
+                }
                                      
                 // sets each property
                 eachMovie.setTitle(title);
