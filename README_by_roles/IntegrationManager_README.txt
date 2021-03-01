@@ -1,10 +1,10 @@
 IntegrationManager README for Project One (CS400 @ UW Madison)
 ========================================================
 
-Name of IntegrationManager: <enter your complete name here>
-@wisc.edu Email of IntegrationManager: <enter your @wisc.edu email address here>
-Group: <enter your two letter group name here>
-Team: <enter your team color: red, blue, or purple, here>
+Name of IntegrationManager: Chi Sing Thao
+@wisc.edu Email of IntegrationManager: cthao45@wisc.edu
+Group: IG
+Team:blue
 
 Complete List of Files:
 -----------------------
@@ -26,8 +26,5 @@ Team Member Contributions:
 
 Signature:
 ----------
-<Type out your full name here to certify that to the best of your understanding,
- the contents of this submission represent the efforts of your team members. If
- you are aware of any exceptions to this, please describe them here below your
- name.>
+Chi Sing Thao
  
