@@ -19,12 +19,14 @@ import java.util.List;
 import java.util.zip.DataFormatException;
 
 /**
- * The MovieDataReader class extends the MovieDataReaderInterface. This class contains a readDataSet
- * method which works to read the inputed file. A more in-depth description is below.
- *
+ * The MovieDataReader class extends the MovieDataReaderInterface. This class
+ * contains a readDataSet method which works to read the inputed file. A more
+ * in-depth description is below.
+ * 
  * @author kristophernavar
+ *
  */
-public class MovieDataReader implements MovieDataReaderInterface {
+public class MovieDataReader implements MovieDataReaderInterface{
 
 
     /**
@@ -39,9 +41,9 @@ public class MovieDataReader implements MovieDataReaderInterface {
     @Override
     public List<MovieInterface> readDataSet(Reader inputFileReader)
         throws FileNotFoundException, IOException, DataFormatException {
-
+        
         // initialize variables
-        BufferedReader reader = new BufferedReader(inputFileReader);
+        BufferedReader reader = new BufferedReader(inputFileReader);        
         List<MovieInterface> movieList = new LinkedList<MovieInterface>();
         String title;
         Integer year;
@@ -49,25 +51,27 @@ public class MovieDataReader implements MovieDataReaderInterface {
         String director;
         String description;
         Float avgVote;
-
+        
         String line = "";
         String seperatedBy = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
-
+        
+                
+        
+        
         try {
             // skips first line of file
             reader.readLine();
             // parse file
-            while ((line = reader.readLine()) != null) {
-
-                String[] eachLine = line.split(seperatedBy, -1);
+            while ((line = reader.readLine()) != null){
+               
+                String[] eachLine = line.split(seperatedBy, - 1);                  
                 Movie eachMovie = new Movie();
-
+                
                 // ensures that each line has equal number of columns as header line
                 if (eachLine.length != 13) {
-                    throw new DataFormatException(
-                        "ERROR: Line contains incorrect number of columns.");
+                    throw new DataFormatException("ERROR: Line contains incorrect number of columns.");
                 }
-
+                              
                 // finds specified properties in data set
                 title = eachLine[0];
                 year = Integer.parseInt(eachLine[2]);
@@ -75,7 +79,25 @@ public class MovieDataReader implements MovieDataReaderInterface {
                 director = eachLine[7];
                 description = eachLine[11];
                 avgVote = Float.parseFloat(eachLine[12]);
-
+                
+                // deletes quotes from genres and accounts for extra spaces in list
+                if (genres.size() != 1) { 
+                    for (int i = 0; i < genres.size(); ++i) {
+                        StringBuilder sb = new StringBuilder(genres.get(i));
+                        sb.deleteCharAt(0);
+                        genres.set(i, sb.toString());
+                    }
+                    
+                    // deletes last quote from last element
+                    String lastGenre = genres.get(genres.size() - 1);
+                    StringBuilder sb2 = new StringBuilder(lastGenre);
+                       
+                    sb2.deleteCharAt(lastGenre.length() - 1);               
+                    lastGenre = sb2.toString();                    
+                    genres.set(genres.size() - 1, lastGenre);
+                                                    
+                }
+                                     
                 // sets each property
                 eachMovie.setTitle(title);
                 eachMovie.setYear(year);
@@ -83,20 +105,21 @@ public class MovieDataReader implements MovieDataReaderInterface {
                 eachMovie.setDirector(director);
                 eachMovie.setDescription(description);
                 eachMovie.setAvgVote(avgVote);
-
+                
                 // adds each movie to the list of movies
                 movieList.add(eachMovie);
-
+                    
             }
         } catch (FileNotFoundException e) {
             System.out.println("ERROR: File was not found.");
         } catch (IOException e) {
             System.out.println("ERROR: Something went wrong reading the file.");
         }
-
+            
         reader.close();
         return movieList;
     }
-
+    
+    
 
 }
