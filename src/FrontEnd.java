@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -29,7 +28,7 @@ public class FrontEnd {
     scanner = new Scanner(System.in);
 
     // initialize back end
-    backEnd = new BackendDummy(args);
+    backEnd = new Backend(args);
 
     // print welcome message
     System.out.println("Welcome to Movie Mapper!");
@@ -42,6 +41,7 @@ public class FrontEnd {
 
     // program loop
     boolean running = true;
+
     int browsingIndex = 0;
     while (running) {
       // print top three movies
@@ -172,7 +172,7 @@ public class FrontEnd {
    */
   private static boolean checkInt(String in) {
     try {
-      int test = Integer.parseInt(in);
+      Integer.parseInt(in);
     } catch (NumberFormatException nfe) {
       return false;
     }
