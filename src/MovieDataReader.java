@@ -97,6 +97,12 @@ public class MovieDataReader implements MovieDataReaderInterface{
                     genres.set(genres.size() - 1, lastGenre);
                                                     
                 }
+                
+                // deletes the quotes from movies with multiple directors
+                if (director.contains("\"")) {
+                    director = director.replace("\"", "");
+                    
+                }
                                      
                 // sets each property
                 eachMovie.setTitle(title);
