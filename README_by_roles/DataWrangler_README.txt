@@ -1,29 +1,30 @@
 DataWrangler README for Project One (CS400 @ UW Madison)
 ========================================================
 
-Name of DataWrangler: <enter your complete name here>
-@wisc.edu Email of DataWrangler: <enter your @wisc.edu email address here>
-Group: <enter your two letter group name here>
-Team: <enter your team color: red, blue, or purple, here>
+Name of DataWrangler: Kristopher Navar
+@wisc.edu Email of DataWrangler: knavar@wisc.edu
+Group: IG
+Team: Blue
 
 Files Written by Me:
 --------------------
-<List all files that were within this project that were written by you, and
- include a short description of the purpose that each file servers>
+Movie.java and MovieDataReader.java were both written by me as well as TestMovieAndMovieDataReader.java contained 2 test methods which were written by me.
+Movie.java class extended the MovieInterface and contained setter and getter methods, allowing the properties to be set to their corresponding property as well as allowed the retrieval of these properties.
+MovieDataReader.java class extended the MovieDataReaderInterface and contained a readDataSet method which functioned to read an inputed file, throwing exceptions if they occurred.
+TestMovieAndMovieDataReader.java class contains a set of tests for the MovieInterface and MovieDataReaderInterface implementations of the Movie Mapper project.
 
 Additional Contributions:
 -------------------------
-<List any additional contributions that you have made toward your team's
- completion of this project.  This might include, but is not limited to things
- like: organizing team communication, creating extra tests or dummy classes,
- assisting team members in any way, etc.>
+I contributed and was a part of the team's communication efforts during the span of this project.
 
 Signature:
 ----------
-<Type out your full name here to certify that all of the files written by you
- that are listed above are the product of your individual development efforts
- for this programming assignment.  List below your name, any exceptions, for 
- example: work reused from a previous semester, code examples taken from any 
- website or book, or anything that was not explicitly authored by you for
- the purpose of completing this assigned CS400 project.>
+Kristopher Navar
+
+Sources that helped me:
+Source 1: 
+https://www.javatpoint.com/how-to-read-csv-file-in-java
+Source 2: 
+https://stackoverflow.com/questions/1757065/java-splitting-a-comma-separated-string-but-ignoring-commas-in-quotes
+
  
