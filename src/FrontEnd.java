@@ -1,3 +1,4 @@
+import java.io.Reader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -27,9 +28,22 @@ public class FrontEnd {
     // initializing scanner variable
     scanner = new Scanner(System.in);
 
+    new FrontEnd().run(args);
+  }
+
+  public void run(String[] args) {
     // initialize back end
     backEnd = new Backend(args);
+    enterBaseMode();
+  }
 
+  public void run(Backend backend) {
+    // initialize back end
+    backEnd = backend;
+    enterBaseMode();
+  }
+
+  public void enterBaseMode() {
     // print welcome message
     System.out.println("Welcome to Movie Mapper!");
     System.out.println("A movie browsing application.");
@@ -37,6 +51,11 @@ public class FrontEnd {
     // select all ratings
     for (String rating : allR) {
       backEnd.addAvgRating(rating);
+    }
+
+    // select all genres
+    for (String genre : backEnd.getAllGenres()) {
+      backEnd.addGenre(genre);
     }
 
     // program loop
@@ -81,13 +100,18 @@ public class FrontEnd {
    * return to the base mode while a number will select/deselect a genre.
    */
   public static void enterGenreMode() {
+    System.out.println("============================");
+    System.out.println("Entered Genre Selection Mode");
+    System.out.println("============================");
+
     // genre selection mode program loop
     boolean inMode = true;
     while (inMode) {
+
       // print selected genres
       printGenres();
       int numMovies = backEnd.getNumberOfMovies();
-      System.out.println("There are " + numMovies + " movies that match your selection.");
+      System.out.println("There are " + numMovies + " movies that match your current selection.");
 
       // prompt command
       System.out.println("Enter 'x' to return to base mode.");
@@ -117,6 +141,11 @@ public class FrontEnd {
         System.out.println("Invalid input.");
       }
     }
+
+    System.out.println("===========================");
+    System.out.println("Exited Genre Selection Mode");
+    System.out.println("===========================");
+
   }
 
   /**
@@ -126,13 +155,17 @@ public class FrontEnd {
    * return to the base mode while a number will select/deselect a rating.
    */
   public static void enterRatingsMode() {
+    System.out.println("=============================");
+    System.out.println("Entered Rating Selection Mode");
+    System.out.println("=============================");
+
     // rating selection mode program loop
     boolean inMode = true;
     while (inMode) {
       // print selected ratings
       printRatings();
       int numMovies = backEnd.getNumberOfMovies();
-      System.out.println("There are " + numMovies + " movies that match your selection.");
+      System.out.println("There are " + numMovies + " movies that match your current selection.");
 
       // prompt command
       System.out.println("Enter 'x' to return to base mode.");
@@ -162,6 +195,11 @@ public class FrontEnd {
         System.out.println("Invalid input.");
       }
     }
+
+    System.out.println("============================");
+    System.out.println("Exited Rating Selection Mode");
+    System.out.println("============================");
+
   }
 
   /**
@@ -210,50 +248,33 @@ public class FrontEnd {
       table[i + 1][6] = movies.get(i).getDescription();
     }
 
-    // find the longest string length of title, director, genre, and description to make sure the strings fit
-    // in the table that will be printed.
-    int[] maxLength = new int[4]; // {title, director, genre, description}
-    for (int i = 1; i < numMovies + 1; i++) {
-      if (table[i][1].length() > maxLength[0]) {
-        maxLength[0] = table[i][1].length();
-      }
-      if (table[i][3].length() > maxLength[1]) {
-        maxLength[1] = table[i][3].length();
-      }
-      if (table[i][5].length() > maxLength[1]) {
-        maxLength[2] = table[i][5].length();
-      }
-      if (table[i][6].length() > maxLength[2]) {
-        maxLength[3] = table[i][6].length();
+    // find the longest string length of each column, and gives enough space to print a proper table
+    int[] maxLength = new int[table[0].length];
+    for (int i = 0; i < numMovies + 1; i++) {
+      for (int j = 0; j < maxLength.length; j++) {
+        if (table[i][j].length() > maxLength[j]) {
+          maxLength[j] = table[i][j].length();
+        }
       }
     }
 
-    String[] format = {
-        "%-" + (2 + maxLength[0]) + "s",
-        "%-" + (2 + maxLength[1]) + "s",
-        "%-" + (2 + maxLength[2]) + "s",
-        "%-" + (2 + maxLength[3]) + "s"};
+    // create format string
+    String format = "";
+    for (int j : maxLength) {
+      format += "%-" + (2 + j) + "s";
+    }
 
     // print in table format
     for (int i = 0; i < numMovies + 1; i++) {
-      System.out.format(
-          "%-6s "             // No.
-              + format[0]         // Title
-              + " %-6s "          // Year
-              + format[1]         // Director
-              + " %-7s "          // Rating
-              + format[2] + " "   // Genre
-              + format[3]         // Description
-              + " %n",            // new line
-          (Object[]) table[i]            // input
-      );
+      System.out.format(format + "%n", (Object[]) table[i]);
     }
 
   }
 
   /**
    * This helper method prints all genres with a "[x] " in front of any genre that is selected and a
-   * "[ ] " in front of a genre that is not selected.
+   * "[ ] " in front of a genre that is not selected. This number also prints out a number before
+   * each genre to help users identify which number to enter to select/deselect which genre.
    */
   private static void printGenres() {
 
@@ -308,5 +329,4 @@ public class FrontEnd {
   private static boolean ratingSelected(String rating) {
     return backEnd.getAvgRatings().contains(rating);
   }
-
 }
