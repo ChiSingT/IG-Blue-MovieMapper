@@ -170,6 +170,7 @@ public class Backend implements BackendInterface {
         }
         newGenre = new genreInfo(genre, add);
         genres[index].add(depth, newGenre);
+        updateListMovies();
         this.depth = 0;
         this.size++;
 
@@ -217,7 +218,6 @@ public class Backend implements BackendInterface {
         // as the movie and adds this object to the hashcode index of the rating
         for (int i = 0; i < MovieObjects.size(); i++) {
             if ((int) (float) MovieObjects.get(i).getAvgVote() == rate) {
-                this.listOfMovies.add(MovieObjects.get(i));
                 add.add(MovieObjects.get(i));
             }
 
@@ -227,11 +227,31 @@ public class Backend implements BackendInterface {
         avgRatings[index].add(depth, newRating);
         this.depth = 0;
         this.size++;
+        updateListMovies();
 
         // rechecks hashtable size
         loadfactor = ((double) this.size) / (double) this.capacity;
         if (loadfactor >= .85) {
             reHashRatings();
+        }
+
+    }
+    /**
+     * method to update listOfMovies once genres has been added or rating has been removed
+     */
+    private void updateListMovies() {
+
+        for (int i = 0; i < this.genres.length; i++) {
+            if (genres[i] != null) {
+                for (int k = 0; k < this.genres[i].size(); k++) {
+                    for (int j = 0; j < this.listOfMovies.size(); j++) {
+                        if (!listOfMovies.get(j).getGenres()
+                            .contains(this.genres[i].get(k).getKey())) {
+                            listOfMovies.remove(listOfMovies.get(j));
+                        }
+                    }
+                }
+            }
         }
 
     }
@@ -394,9 +414,7 @@ public class Backend implements BackendInterface {
                     }
                     this.size--;
 
-                    for (int k = 0; k < movies.size(); k++) {
-                        listOfMovies.remove(movies.get(k));
-                    }
+                    updateListMovies();
                     return;
                 }
             }
@@ -436,9 +454,13 @@ public class Backend implements BackendInterface {
                     }
                     this.size--;
 
-                    for (int k = 0; k < movies.size(); k++) {
-                        listOfMovies.remove(movies.get(k));
+                    for (int k = 0; k < listOfMovies.size(); k++) {
+                        if ((int) (float) listOfMovies.get(k).getAvgVote() == Integer
+                            .valueOf(rating)) {
+                            listOfMovies.remove(listOfMovies.get(k));
+                        }
                     }
+
                     return;
                 }
             }
@@ -531,3 +553,4 @@ public class Backend implements BackendInterface {
 
     }
 }
+
