@@ -15,7 +15,10 @@ TestMovieAndMovieDataReader.java class contains a set of tests for the MovieInte
 
 Additional Contributions:
 -------------------------
-I contributed and was a part of the team's communication efforts during the span of this project. I was responsive to my team meetings and provided help when needed. During implementation and testing, I made changes to ensure that our program ran smoothly and accounted for any issues with our data. I stayed on top of the work and was responsive to any issues with reading and returning our data. 
+I contributed and was a part of the team's communication efforts during the span of this project. 
+I was responsive to my team meetings and provided help when needed. 
+During implementation and testing, I made changes to ensure that our program ran smoothly and accounted for any issues with our data. 
+I stayed on top of the work and was responsive to any issues with reading and returning our data. 
 
 Signature:
 ----------
