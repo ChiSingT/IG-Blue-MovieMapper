@@ -10,12 +10,19 @@ Files Written by Me:
 --------------------
 I implmented the Backend file
 
-the purpose of this class is to take in the file that is read through the front end and pass it through the Data Wranglers MovieDataReader method. From there the user is able to add specific genres and ratings in order to create a specific selection of movies that pertain to these genres and ratings. The Backend class adds and removes ratings and genres that are specified by the user and updates the selection of movies as those genres and ratings change.
+the purpose of this class is to take in the file that is read through the front end and pass it through 
+the Data Wranglers MovieDataReader method. From there the user is able to add specific genres and ratings 
+in order to create a specific selection of movies that pertain to these genres and ratings. 
+The Backend class adds and removes ratings and genres that are specified by the user and updates the 
+selection of movies as those genres and ratings change.
 
 
 Additional Contributions:
 -------------------------
-< I helped with scheduling the inital meeting for the project and creating the when2meet for 2/3 of our meetings. I made sure to corrdinate with other group members and express whenever I was having trouble. I also helped the red teams backend developer with questions about the hash table and how to implement it within this project
+I helped with scheduling the inital meeting for the project and creating the when2meet for 2/3 of our meetings. 
+I made sure to corrdinate with other group members and express whenever I was having trouble. 
+I also helped the red teams backend developer with questions about the hash table and how to 
+implement it within this project.
 
 Signature:
 Bryanna Plaisir
