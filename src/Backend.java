@@ -573,7 +573,7 @@ public class Backend implements BackendInterface {
 
         
         for (int i = startingIndex; i < listOfMovies.size(); i++) {
-            if( i <= startingIndex + 3) {
+            if( i >= startingIndex + 3) {
                 break;
             }
             else {
