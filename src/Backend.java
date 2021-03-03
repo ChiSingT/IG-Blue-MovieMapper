@@ -143,14 +143,14 @@ public class Backend implements BackendInterface {
             return;
         }
 
-        if (containsGenre(genre)) {
-            return;
-        }
-
         // checks hashtable size
         double loadfactor = (double) this.genresize / this.genrecapacity;
         if (loadfactor >= .85) {
             reHashGenres();
+        }
+        
+        if (containsGenre(genre)) {
+            return;
         }
 
         // finds hashcode and hashcode index for genre
@@ -166,7 +166,9 @@ public class Backend implements BackendInterface {
         // as the movie and adds this object to the hashcode index of the genre
         for (int i = 0; i < MovieObjects.size(); i++) {
             if (MovieObjects.get(i).getGenres().contains(genre)) {
-                this.listOfMovies.add(MovieObjects.get(i));
+                if(!this.listOfMovies.contains(MovieObjects.get(i))){
+                    this.listOfMovies.add(MovieObjects.get(i));
+                }
                 add.add(MovieObjects.get(i));
             }
 
@@ -196,15 +198,19 @@ public class Backend implements BackendInterface {
         if (rate < 0 || rate > 10) {
             return;
         }
-        // checks to see if the list of avgRatings already contains the rating passed through method
-        if (containsRating(String.valueOf(rate))) {
-            return;
-        }
         double loadfactor = ((double) this.ratingsize) / (double) this.ratingcapacity;
 
         if (loadfactor >= .85) {
             reHashRatings();
         }
+
+        
+        // checks to see if the list of avgRatings already contains the rating passed through method
+        if (containsRating(String.valueOf(rate))) {
+            return;
+        }
+     
+
 
         // finds hashcode and hashcode index for rating
         int hashCode = String.valueOf(rate).hashCode();
@@ -416,11 +422,37 @@ public class Backend implements BackendInterface {
                         genres[index] = null;
                     }
                     this.genresize--;
+                    
+                    for(int o = 0; o < movies.size(); o++) {
+                        if(listOfMovies.contains(movies.get(o))) {
+                            listOfMovies.remove(movies.get(o));
+                    }
+                   }
+                    addtoListMovies();
 
-                    updateListMovies();
                     return;
                 }
             }
+        }
+    }
+    private void addtoListMovies() {
+       List<String> allGenres = getGenres(); 
+       List<String> movieGenres;
+       int num = 0;
+        
+            for(int j = 0; j < MovieObjects.size(); j++) {
+                movieGenres = MovieObjects.get(j).getGenres();
+                for(int i = 0; i < allGenres.size(); i++) {
+                    if(movieGenres.contains(allGenres.get(i))) {
+                        num += 1;
+                    }
+                    
+            }
+                if(num == allGenres.size()) {
+                    listOfMovies.add(MovieObjects.get(j));
+                    num = 0;
+                }
+            
         }
     }
 
@@ -539,7 +571,11 @@ public class Backend implements BackendInterface {
     public List<MovieInterface> getThreeMovies(int startingIndex) {
         List<MovieInterface> movieList = new ArrayList<MovieInterface>();
 
+        
         for (int i = startingIndex; i < listOfMovies.size(); i++) {
+            if( i == startingIndex + 3) {
+                break;
+            }
             movieList.add(listOfMovies.get(i));
         }
 
