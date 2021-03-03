@@ -578,9 +578,12 @@ public class Backend implements BackendInterface {
             }
             movieList.add(listOfMovies.get(i));
         }
+        
+        for(int i = 0; i < movieList.size(); i++) {
+        }
 
         for (int i = 0; i < movieList.size(); i++) {
-            for (int j = 1; j < movieList.size(); j++) {
+            for (int j = i + 1; j < movieList.size(); j++) {
                 if (movieList.get(i).getAvgVote() < movieList.get(j).getAvgVote()) {
                     MovieInterface swap = movieList.get(j);
                     movieList.set(j, movieList.get(i));
