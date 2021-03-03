@@ -14,8 +14,10 @@ public class Backend implements BackendInterface {
     private List<MovieInterface> MovieObjects;
     private LinkedList<genreInfo>[] genres;
     private LinkedList<ratingInfo>[] avgRatings;
-    private int capacity = 10;
-    private int size = 0;
+    private int ratingcapacity = 10;
+    private int genresize = 0;
+    private int ratingsize = 0;
+    private int genrecapacity = 10;
     private int depth = 0;
 
 
@@ -98,13 +100,14 @@ public class Backend implements BackendInterface {
         this.MovieObjects = new ArrayList<MovieInterface>();
 
         try {
-            reader = new FileReader(args[0]);
+            
+                reader = new FileReader(args[0]);
             this.MovieObjects = movies.readDataSet(reader);
         } catch (Exception e) {
         }
 
-        this.genres = (LinkedList<genreInfo>[]) new LinkedList[capacity];
-        this.avgRatings = (LinkedList<ratingInfo>[]) new LinkedList[capacity];
+        this.genres = (LinkedList<genreInfo>[]) new LinkedList[genrecapacity];
+        this.avgRatings = (LinkedList<ratingInfo>[]) new LinkedList[ratingcapacity];
         this.listOfMovies = new ArrayList();
     }
 
@@ -121,8 +124,8 @@ public class Backend implements BackendInterface {
             this.MovieObjects = movies.readDataSet(r);
         } catch (Exception e) {
         }
-        genres = (LinkedList<genreInfo>[]) new LinkedList[capacity];
-        avgRatings = (LinkedList<ratingInfo>[]) new LinkedList[capacity];
+        genres = (LinkedList<genreInfo>[]) new LinkedList[genrecapacity];
+        avgRatings = (LinkedList<ratingInfo>[]) new LinkedList[ratingcapacity];
         this.listOfMovies = new ArrayList();
     }
 
@@ -145,14 +148,14 @@ public class Backend implements BackendInterface {
         }
 
         // checks hashtable size
-        double loadfactor = (double) this.size / this.capacity;
+        double loadfactor = (double) this.genresize / this.genrecapacity;
         if (loadfactor >= .85) {
             reHashGenres();
         }
 
         // finds hashcode and hashcode index for genre
         int hashCode = genre.hashCode();
-        int index = Math.abs(hashCode) % capacity;
+        int index = Math.abs(hashCode) % genrecapacity;
 
         if (depth == 0) {
             this.genres[index] = new LinkedList<genreInfo>();
@@ -172,7 +175,7 @@ public class Backend implements BackendInterface {
         genres[index].add(depth, newGenre);
         updateListMovies();
         this.depth = 0;
-        this.size++;
+        this.genresize++;
 
     }
 
@@ -197,7 +200,7 @@ public class Backend implements BackendInterface {
         if (containsRating(String.valueOf(rate))) {
             return;
         }
-        double loadfactor = ((double) this.size) / (double) this.capacity;
+        double loadfactor = ((double) this.ratingsize) / (double) this.ratingcapacity;
 
         if (loadfactor >= .85) {
             reHashRatings();
@@ -205,7 +208,7 @@ public class Backend implements BackendInterface {
 
         // finds hashcode and hashcode index for rating
         int hashCode = String.valueOf(rate).hashCode();
-        int index = Math.abs(hashCode) % capacity;
+        int index = Math.abs(hashCode) % ratingcapacity;
 
         if (depth == 0) {
             this.avgRatings[index] = new LinkedList<ratingInfo>();
@@ -226,11 +229,11 @@ public class Backend implements BackendInterface {
         newRating = new ratingInfo(String.valueOf(rate), add);
         avgRatings[index].add(depth, newRating);
         this.depth = 0;
-        this.size++;
+        this.ratingsize++;
         updateListMovies();
 
         // rechecks hashtable size
-        loadfactor = ((double) this.size) / (double) this.capacity;
+        loadfactor = ((double) this.ratingsize) / (double) this.ratingcapacity;
         if (loadfactor >= .85) {
             reHashRatings();
         }
@@ -261,8 +264,8 @@ public class Backend implements BackendInterface {
      */
     private void reHashGenres() {
         this.depth = 0;
-        int newcap = 2 * this.capacity;
-        this.capacity = newcap;
+        int newcap = 2 * this.genrecapacity;
+        this.genrecapacity = newcap;
         LinkedList<genreInfo>[] newHash = this.genres;
         this.genres = (LinkedList<genreInfo>[]) new LinkedList[newcap];
 
@@ -272,7 +275,7 @@ public class Backend implements BackendInterface {
                 for (int j = 0; j < newHash[i].size(); j++) {
                     genreInfo node = newHash[i].get(j);
                     int hashcode = node.getKey().hashCode();
-                    int index2 = Math.abs(hashcode) % this.capacity;
+                    int index2 = Math.abs(hashcode) % this.genrecapacity;
 
                     if (genres[index2] == null) {
                         genres[index2] = new LinkedList<genreInfo>();
@@ -298,8 +301,8 @@ public class Backend implements BackendInterface {
      */
     private void reHashRatings() {
         this.depth = 0;
-        int newcap = 2 * this.capacity;
-        this.capacity = newcap;
+        int newcap = 2 * this.ratingcapacity;
+        this.ratingcapacity = newcap;
         LinkedList<ratingInfo>[] newHash = this.avgRatings;
         this.avgRatings = (LinkedList<ratingInfo>[]) new LinkedList[newcap];
 
@@ -308,7 +311,7 @@ public class Backend implements BackendInterface {
                 for (int j = 0; j < newHash[i].size(); j++) {
                     ratingInfo node = newHash[i].get(j);
                     int hashcode = node.getKey().hashCode();
-                    int index2 = Math.abs(hashcode) % this.capacity;
+                    int index2 = Math.abs(hashcode) % this.ratingcapacity;
 
                     if (avgRatings[index2] == null) {
                         avgRatings[index2] = new LinkedList<ratingInfo>();
@@ -337,7 +340,7 @@ public class Backend implements BackendInterface {
      */
     public boolean containsGenre(String key) {
         int hashCode = key.hashCode();
-        int index = Math.abs(hashCode) % this.capacity;
+        int index = Math.abs(hashCode) % this.genrecapacity;
 
 
         if (this.genres[index] == null) {
@@ -362,7 +365,7 @@ public class Backend implements BackendInterface {
      */
     public boolean containsRating(String key) {
         int hashCode = key.hashCode();
-        int index = Math.abs(hashCode) % this.capacity;
+        int index = Math.abs(hashCode) % this.ratingcapacity;
 
 
         if (this.avgRatings[index] == null) {
@@ -392,7 +395,7 @@ public class Backend implements BackendInterface {
             return;
         }
         int hashCode = genre.hashCode();
-        int index = Math.abs(hashCode) % this.capacity;
+        int index = Math.abs(hashCode) % this.genrecapacity;
 
         // checks to see if the genre is within the list of genres
         if (!containsGenre(genre)) {
@@ -412,7 +415,7 @@ public class Backend implements BackendInterface {
                     if (genres[index].size() == 0) {
                         genres[index] = null;
                     }
-                    this.size--;
+                    this.genresize--;
 
                     updateListMovies();
                     return;
@@ -433,7 +436,7 @@ public class Backend implements BackendInterface {
         }
         // determines hashcode and hashindex for rating
         int hashCode = rating.hashCode();
-        int index = Math.abs(hashCode) % this.capacity;
+        int index = Math.abs(hashCode) % this.ratingcapacity;
 
         // checks if rating to remove is within the list of ratings
         if (!containsRating(rating)) {
@@ -452,7 +455,7 @@ public class Backend implements BackendInterface {
                     if (avgRatings[index].size() == 0) {
                         avgRatings[index] = null;
                     }
-                    this.size--;
+                    this.ratingsize--;
 
                     for (int k = 0; k < listOfMovies.size(); k++) {
                         if ((int) (float) listOfMovies.get(k).getAvgVote() == Integer
@@ -553,4 +556,3 @@ public class Backend implements BackendInterface {
 
     }
 }
-
